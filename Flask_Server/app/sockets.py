@@ -1,4 +1,3 @@
-
 import os
 import re
 import cv2
@@ -41,8 +40,8 @@ def register_socketio_events(socketio):
         # Convert to OpenCV image format
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        # Run inference on the image using YOLO model
-        result = model(image)
+        # Run inference on the image using YOLO model (CPU only)
+        result = model(image, device='cpu')
 
         for r in result:
             if len(r.boxes.xywh) > 0:
@@ -97,8 +96,8 @@ def register_socketio_events(socketio):
         # Convert to OpenCV image format
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        # Run inference on the image using YOLO model
-        result = model(image)
+        # Run inference on the image using YOLO model (CPU only)
+        result = model(image, device='cpu')
 
         for r in result:
             if len(r.boxes.xywh) > 0:
@@ -137,3 +136,329 @@ def register_socketio_events(socketio):
                     else:
                         socketio.emit(
                             'ocr', 'Unable to detect text in the image.')
+```
+
+```markdown
+# Runme.md
+
+## Steps to Run the Application on a Windows Laptop (CPU Only)
+
+These steps will guide you through setting up and running the application on your Windows laptop using only the CPU.
+
+### Prerequisites
+
+1.  **Python Installation**:
+    *   Download Python 3.7 or higher from the [official Python website](https://www.python.org/downloads/windows/).
+    *   During installation, make sure to check the box that says "Add Python to PATH" to enable running Python from the command line.
+2.  **Git Installation** (Optional but Recommended):
+    *   Download and install Git from the [official Git website](https://git-scm.com/download/windows).
+    *   Git allows you to easily clone the project repository.
+
+### Step-by-Step Instructions
+
+1.  **Clone the Repository** (If Using Git):
+
+    *   Open Command Prompt or PowerShell.
+    *   Navigate to the directory where you want to store the project:
+
+        ```
+        cd <your_directory>
+        ```
+
+        Replace `<your_directory>` with the actual path.
+
+    *   Clone the repository:
+
+        ```
+        git clone <repository_url>
+        ```
+
+        Replace `<repository_url>` with the URL of your project repository.
+
+2.  **Navigate to the Project Directory**:
+
+    *   If you cloned the repository, navigate into the project directory:
+
+        ```
+        cd <project_directory>
+        ```
+
+        Replace `<project_directory>` with the name of your project directory.
+
+3.  **Create a Virtual Environment**:
+
+    *   It's recommended to create a virtual environment to isolate the project dependencies.
+
+        ```
+        python -m venv venv
+        ```
+
+4.  **Activate the Virtual Environment**:
+
+    *   In Command Prompt:
+
+        ```
+        venv\Scripts\activate
+        ```
+
+    *   In PowerShell:
+
+        ```
+        .\venv\Scripts\Activate.ps1
+        ```
+
+5.  **Install Dependencies**:
+
+    *   Install the required Python packages using pip:
+
+        ```
+        pip install -r requirements.txt
+        ```
+
+        Make sure you have a `requirements.txt` file listing all the dependencies.  If not, you may need to install dependencies individually.  Common dependencies include Flask, flask-socketio, opencv-python, numpy, and potentially torch and torchvision.
+
+        Example `requirements.txt`:
+
+        ```
+        Flask==2.0.1
+        flask-socketio==5.0.1
+        opencv-python==4.5.3.56
+        numpy==1.21.2
+        torch==1.10.0+cpu  # CPU-only version of PyTorch
+        torchvision==0.11.1+cpu # CPU-only version of torchvision
+        Pillow
+        easyocr
+        ```
+
+6.  **Configure for CPU Usage**:
+
+    *   Modify the application code to enforce CPU usage.  This typically involves setting the device argument to `'cpu'` when loading or using the model.
+
+        *   **Example (in `app.py` or relevant file):**
+
+            ```python
+            import torch
+            # Ensure CUDA is not used
+            torch.device('cpu')
+
+            # Load your model, specifying the device
+            model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, device='cpu')  # or yolov5m, yolov5l, etc.
+            ```
+    *   Modify the `register_socketio_events` function in your `socket_events.py` file to explicitly use the CPU:
+
+        ```python
+        # Run inference on the image using YOLO model (CPU only)
+        result = model(image, device='cpu')
+        ```
+
+7.  **Set Environment Variables** (If Necessary):
+
+    *   If your application requires any environment variables, set them in the Command Prompt or PowerShell before running the application. For example:
+
+        ```
+        set FLASK_APP=your_app.py
+        set FLASK_ENV=development
+        ```
+
+        In PowerShell:
+
+        ```powershell
+        $env:FLASK_APP="your_app.py"
+        $env:FLASK_ENV="development"
+        ```
+
+        Replace `your_app.py` with the name of your main application file.
+
+8.  **Run the Application**:
+
+    *   Run the Flask application:
+
+        ```
+        flask run
+        ```
+
+    *   Or, if you are using a different startup command:
+
+        ```
+        python your_app.py
+        ```
+
+        Replace `your_app.py` with the name of your main application file.
+
+9.  **Access the Application**:
+
+    *   Open your web browser and navigate to the address provided in the console output (usually `http://127.0.0.1:5000` or `http://localhost:5000`).
+
+### Troubleshooting
+
+*   **CUDA Errors**: If you encounter CUDA-related errors, ensure that you have installed the CPU-only version of PyTorch and that your code explicitly uses the CPU.
+*   **Dependency Issues**: Double-check your `requirements.txt` file and ensure that all dependencies are installed correctly.
+*   **Environment Variables**: Verify that all required environment variables are set correctly.
+*   **Port Conflicts**: If the application fails to start due to a port conflict, try running it on a different port using the `--port` option:
+
+    ```
+    flask run --port 5001
+    ```
+
+    Then, access the application at `http://127.0.0.1:5001`.
+
+By following these steps, you should be able to run the application on your Windows laptop using the CPU.
+```# Runme.md
+
+## Steps to Run the Application on a Windows Laptop (CPU Only)
+
+These steps will guide you through setting up and running the application on your Windows laptop using only the CPU.
+
+### Prerequisites
+
+1.  **Python Installation**:
+    *   Download Python 3.7 or higher from the [official Python website](https://www.python.org/downloads/windows/).
+    *   During installation, make sure to check the box that says "Add Python to PATH" to enable running Python from the command line.
+2.  **Git Installation** (Optional but Recommended):
+    *   Download and install Git from the [official Git website](https://git-scm.com/download/windows/).
+    *   Git allows you to easily clone the project repository.
+
+### Step-by-Step Instructions
+
+1.  **Clone the Repository** (If Using Git):
+
+    *   Open Command Prompt or PowerShell.
+    *   Navigate to the directory where you want to store the project:
+
+        ```
+        cd <your_directory>
+        ```
+
+        Replace `<your_directory>` with the actual path.
+
+    *   Clone the repository:
+
+        ```
+        git clone <repository_url>
+        ```
+
+        Replace `<repository_url>` with the URL of your project repository.
+
+2.  **Navigate to the Project Directory**:
+
+    *   If you cloned the repository, navigate into the project directory:
+
+        ```
+        cd <project_directory>
+        ```
+
+        Replace `<project_directory>` with the name of your project directory.
+
+3.  **Create a Virtual Environment**:
+
+    *   It's recommended to create a virtual environment to isolate the project dependencies.
+
+        ```
+        python -m venv venv
+        ```
+
+4.  **Activate the Virtual Environment**:
+
+    *   In Command Prompt:
+
+        ```
+        venv\Scripts\activate
+        ```
+
+    *   In PowerShell:
+
+        ```
+        .\venv\Scripts\Activate.ps1
+        ```
+
+5.  **Install Dependencies**:
+
+    *   Install the required Python packages using pip:
+
+        ```
+        pip install -r requirements.txt
+        ```
+
+        Make sure you have a `requirements.txt` file listing all the dependencies.  If not, you may need to install dependencies individually.  Common dependencies include Flask, flask-socketio, opencv-python, numpy, and potentially torch and torchvision.
+
+        Example `requirements.txt`:
+
+        ```
+        Flask==2.0.1
+        flask-socketio==5.0.1
+        opencv-python==4.5.3.56
+        numpy==1.21.2
+        torch==1.10.0+cpu  # CPU-only version of PyTorch
+        torchvision==0.11.1+cpu # CPU-only version of torchvision
+        Pillow
+        easyocr
+        ```
+
+6.  **Configure for CPU Usage**:
+
+    *   Modify the application code to enforce CPU usage.  This typically involves setting the device argument to `'cpu'` when loading or using the model.
+
+        *   **Example (in `app.py` or relevant file):**
+
+            ```python
+            import torch
+            # Ensure CUDA is not used
+            torch.device('cpu')
+
+            # Load your model, specifying the device
+            model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, device='cpu')  # or yolov5m, yolov5l, etc.
+            ```
+    *   Modify the `register_socketio_events` function in your `socket_events.py` file to explicitly use the CPU:
+
+        ```python
+        # Run inference on the image using YOLO model (CPU only)
+        result = model(image, device='cpu')
+        ```
+
+7.  **Set Environment Variables** (If Necessary):
+
+    *   If your application requires any environment variables, set them in the Command Prompt or PowerShell before running the application. For example:
+
+        ```
+        set FLASK_APP=your_app.py
+        set FLASK_ENV=development
+        ```
+
+        In PowerShell:
+
+        ```powershell
+        $env:FLASK_APP="your_app.py"
+        $env:FLASK_ENV="development"
+        ```
+
+        Replace `your_app.py` with the name of your main application file.
+
+8.  **Run the Application**:
+
+    *   Run the Flask application:
+
+        ```
+        flask run
+        ```
+
+    *   Or, if you are using a different startup command:
+
+        ```
+        python your_app.py
+        ```
+
+        Replace `your_app.py` with the name of your main application file.
+
+9.  **Access the Application**:
+
+    *   Open your web browser and navigate to the address provided in the console output (usually `http://127.0.0.1:5000` or `http://localhost:5000`).
+
+### Troubleshooting
+
+*   **CUDA Errors**: If you encounter CUDA-related errors, ensure that you have installed the CPU-only version of PyTorch and that your code explicitly uses the CPU.
+*   **Dependency Issues**: Double-check your `requirements.txt` file and ensure that all dependencies are installed correctly.
+*   **Environment Variables**: Verify that all required environment variables are set correctly.
+*   **Port Conflicts**: If the application fails to start due to a port conflict, try running it on a different port using the `--port` option:
+
+    ```
+    flask run --port 5001

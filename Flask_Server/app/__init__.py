@@ -33,7 +33,7 @@ db = SQLAlchemy(app)
 api = Api(app)
 socketio = SocketIO(app, cors_allowed_origins='*')
 model = YOLO('ANPR_Model/best.pt')
-ocr = PaddleOCR(use_angle_cls=True, lang='en', USE_GPU=True)
+ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=False)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
